@@ -1,8 +1,7 @@
 # Nest CQRS Rest api example + OpenTelemetry
 
-This is sample nestjs project to demo opentelemetry.
+This is sample nestjs project to demo opentelemetry based on the example from https://github.com/kyhsa93/nestjs-rest-cqrs-example.git. 
 - link: https://nestjs.com
-
 
 ## Getting started
 This is REST api made by node.js, nest, redis, mysql with typescript.
