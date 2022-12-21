@@ -2,14 +2,15 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { LoggingInterceptor } from 'libs/LoggingInterceptor';
+// import { LoggingInterceptor } from 'libs/LoggingInterceptor';
+import { Logger } from 'nestjs-pino';
 import { HttpExceptionFilter } from 'libs/HttpExceptionFilter';
 
 import { Config } from 'src/Config';
 import { AppModule } from 'src/AppModule';
 import helmet from 'helmet';
 import compression from 'compression';
-import otelSDK from './opentelemetry';
+import otelSDK from 'src/opentelemetry';
 
 function setupSwagger(app: INestApplication): void {
   const documentBuilder = new DocumentBuilder()
@@ -26,14 +27,20 @@ function setupSwagger(app: INestApplication): void {
 }
 
 async function bootstrap() {
-  await otelSDK.start();
+  await otelSDK
+    .start()
+    .then(() => {
+      console.log('Tracing initialized');
+    })
+    .catch((error) => console.log('Error initializing tracing', error));
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
   app.enableCors();
   app.use(helmet());
   app.use(compression());
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useLogger(app.get(Logger));
+  // app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
   setupSwagger(app);
   await app.listen(Config.PORT);

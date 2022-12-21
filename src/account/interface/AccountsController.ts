@@ -52,6 +52,7 @@ import { FindAccountsQuery } from 'src/account/application/query/FindAccountsQue
 import { RemitCommand } from 'src/account/application/command/RemitCommand';
 
 import { ErrorMessage } from 'src/account/domain/ErrorMessage';
+import { context, trace } from '@opentelemetry/api';
 
 @ApiTags('Accounts')
 @Controller()
@@ -68,12 +69,15 @@ export class AccountsController {
     description: ResponseDescription.INTERNAL_SERVER_ERROR,
   })
   async openAccount(@Body() body: OpenAccountRequestDTO): Promise<void> {
+    const span = trace.getSpan(context.active());
     const command = new OpenAccountCommand(
       body.name,
       body.email,
       body.password,
     );
     await this.commandBus.execute(command);
+    console.dir(span);
+    span?.end();
   }
 
   @Auth()

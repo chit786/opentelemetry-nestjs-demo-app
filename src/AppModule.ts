@@ -11,14 +11,28 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { DatabaseModule } from 'libs/DatabaseModule';
 import { MessageModule } from 'libs/MessageModule';
 import { RequestStorageMiddleware } from 'libs/RequestStorageMiddleware';
+import { OpenTelemetryModule } from 'nestjs-otel';
 
 import { AppController } from 'src/AppController';
 import { AppService } from 'src/AppService';
 import { AccountsModule } from 'src/account/AccountsModule';
 import { NotificationModule } from 'src/notification/NotificationModule';
 
+import { LoggerModule } from 'libs/LoggerModule';
+
+const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
+  metrics: {
+    hostMetrics: true,
+    apiMetrics: {
+      enable: true,
+    },
+  },
+});
+
 @Module({
   imports: [
+    OpenTelemetryModuleConfig,
+    LoggerModule,
     AccountsModule,
     DatabaseModule,
     MessageModule,
