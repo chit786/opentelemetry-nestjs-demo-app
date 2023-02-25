@@ -14,6 +14,7 @@ datasources:
     basicAuth: false
     isDefault: false
     version: 1
+    uid: prometheus
     editable: false
   - name: Tempo
     type: tempo
@@ -26,6 +27,18 @@ datasources:
     editable: true
     apiVersion: 1
     uid: tempo
+    jsonData:
+      lokiSearch:
+        datasourceUid: loki
+      serviceMap:
+        datasourceUid: prometheus
+      traceQuery:
+        timeShiftEnabled: false
+      tracesToLogs:
+        datasourceUid: loki
+        filterBySpanID: true
+        filterByTraceID: true
+        tags: ["jobs"]
   - name: Tempo-Multitenant
     type: tempo
     access: proxy
@@ -52,6 +65,7 @@ datasources:
     version: 1
     editable: false
     apiVersion: 1
+    uid: loki
     jsonData:
       derivedFields:
         - datasourceUid: tempo
