@@ -24,6 +24,7 @@ module.exports = {
     '*.yml',
     'Dockerfile*',
     'node_modules',
+    'examples',
     '*ignore',
     '*.json',
   ],
