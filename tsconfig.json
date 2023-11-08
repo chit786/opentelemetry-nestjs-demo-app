@@ -15,5 +15,8 @@
     "strictNullChecks": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
-  }
+  },
+  "exclude": [
+    "examples"
+  ]
 }

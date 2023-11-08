@@ -1,0 +1,5 @@
+FROM node:hydrogen-alpine
+COPY examples/express-sample-app /app
+WORKDIR /app
+RUN npm ci
+ENTRYPOINT [ "node", "--require", "./opentelemetry.js", "app.js" ]
